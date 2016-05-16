@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
-
+import time
 
 class NewVisitorTest(unittest.TestCase):
 
@@ -30,7 +30,7 @@ class NewVisitorTest(unittest.TestCase):
         )
 
         # Lacy types in "buy eggs for egg salad"
-        inputbox.send_keys('buy eggs for egg salad')
+        inputbox.send_keys('Buy eggs for egg salad')
 
         # When she hits enter the page is updated with
         # "1: buy eggs for egg salad"
@@ -38,13 +38,35 @@ class NewVisitorTest(unittest.TestCase):
 
         table = self.browser.find_element_by_id('id_list_table')
         rows = table.find_elements_by_tag_name('tr')
-        self.assertTrue(
-            any(row.text == '1: buy eggs for egg salad' for row in rows),
-            "New to-do item did not appear in table"
-        )
+
+        # self.assertTrue(
+        #     any(row.text == '1: buy eggs for egg salad' for row in rows),
+        #     "New to-do item did not appear in table -- its text was:\n%s" % (
+        #         table.text
+        #     )
+        # )
+        # Much simpler test
+        self.assertIn('1: Buy eggs for egg salad', [row.text for row in rows])
 
         # There is still a text box waiting for another to-do item
+        # she enters "make egg salad"
+        inputbox = self.browser.find_element_by_id("id_new_item")
+        inputbox.send_keys("make egg salad")
+
+        inputbox.send_keys(Keys.ENTER)
+        table = self.browser.find_element_by_id('id_list_table')
+        rows = table.find_elements_by_tag_name('tr')
+        self.assertIn(
+            '2: make egg salad',
+            [row.text for row in rows]
+        )
+
+        # she wonders if the site will remember her list
+        # she sees that a unique URL was generated for her -- some explanatory text as well
+
         self.fail("finish the test!")
+
+        # she visits the URL and her list is just as she left it.
 
 
 if __name__ == '__main__':
