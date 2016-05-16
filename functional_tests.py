@@ -50,6 +50,7 @@ class NewVisitorTest(unittest.TestCase):
 
         inputbox.send_keys(Keys.ENTER)
 
+        self.check_for_row_in_list_table('1: buy eggs for egg salad')
         self.check_for_row_in_list_table('2: make egg salad')
 
         # she wonders if the site will remember her list
