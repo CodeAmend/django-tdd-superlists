@@ -82,7 +82,7 @@ class NewVisitorTest(LiveServerTestCase):
         # again, no trace of Lacy's list
         self.assertNotIn('buy eggs for egg salad', page_text)
         self.assertNotIn('make egg salad', page_text)
-        
+
         self.fail("finish the test!")
 
         # she visits the URL and her list is just as she left it.
