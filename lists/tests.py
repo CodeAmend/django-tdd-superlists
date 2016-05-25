@@ -38,15 +38,11 @@ class HomePageTest(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response['location'], '/lists/the-only-list-in-the-world/')
 
-    def test_home_page_lists_all_list_items(self):
-        Item.objects.create(text="item 1")
-        Item.objects.create(text="item 2")
+    def test_home_page_only_save_items_when_necessary(self):
 
         request = HttpRequest()
-        response = home_page(request)
-
-        self.assertIn('item 1', response.content.decode())
-        self.assertIn('item 2', response.content.decode())
+        home_page(request)
+        self.assertEqual(Item.objects.count(), 0)
 
 
 class ItemModelTest(TestCase):
@@ -66,12 +62,6 @@ class ItemModelTest(TestCase):
         self.assertEqual(saved_items[0].text, 'The first (ever) list item')
         self.assertEqual(saved_items[1].text, 'The very next item')
 
-    def test_home_page_only_save_items_when_necessary(self):
-
-        request = HttpRequest()
-        home_page(request)
-        self.assertEqual(Item.objects.count(), 0)
-
 
 class ListViewTest(TestCase):
 
@@ -83,3 +73,7 @@ class ListViewTest(TestCase):
 
         self.assertContains(response, 'item 1')
         self.assertContains(response, 'item 2')
+
+    # def test_uses_list_template(self):
+    #     response = self.client.get('/lists/the-only-list-in-the-world/')
+    #     self.assertTemplateUsed(response, 'view_list')
