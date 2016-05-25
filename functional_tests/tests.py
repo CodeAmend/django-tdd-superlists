@@ -37,10 +37,12 @@ class NewVisitorTest(LiveServerTestCase):
         # Lacy types in "buy eggs for egg salad"
         inputbox.send_keys('buy eggs for egg salad')
 
-        # When she hits enter the page is updated with
-        # "1: buy eggs for egg salad"
+        # When she hits enter she is directed to a unique URL
+        # 1: buy eggs for egg salad is listed as the first item.
         inputbox.send_keys(Keys.ENTER)
 
+        lacy_list_url = self.browser.current_url
+        self.assertRegex(lacy_list_url, '/lists/.+')
         self.check_for_row_in_list_table('1: buy eggs for egg salad')
 
         # There is still a text box waiting for another to-do item
@@ -53,9 +55,34 @@ class NewVisitorTest(LiveServerTestCase):
         self.check_for_row_in_list_table('1: buy eggs for egg salad')
         self.check_for_row_in_list_table('2: make egg salad')
 
-        # she wonders if the site will remember her list
-        # she sees that a unique URL was generated for her -- some explanatory text as well
+        # Now a new user Francis comes to the site
 
+        # A new browser session to emulate a new user with different cookies.
+        self.browser.quit()
+        self.browser = webdriver.Firefox()
+
+        # Francis visits home page and there is no sign of Lacy's list
+        self.browser.get(self.live_server_url)
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('buy eggs for egg salad', page_text)
+        self.assertNotIn('make egg salad', page_text)
+
+        # Francis starts adding list items
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        inputbox.send_keys('Buy milk')
+        inputbox.send_keys(Keys.ENTER)
+
+        # Francis is taken to a unique URL
+        # first item is "1: Buy milk"
+
+        francis_list_url = self.browser.current_url
+        self.assertRegex(francis_list_url, '/lists/.+')
+        self.assertNotEqual(francis_list_url, lacy_list_url)
+
+        # again, no trace of Lacy's list
+        self.assertNotIn('buy eggs for egg salad', page_text)
+        self.assertNotIn('make egg salad', page_text)
+        
         self.fail("finish the test!")
 
         # she visits the URL and her list is just as she left it.
