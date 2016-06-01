@@ -1,7 +1,7 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from django.test import LiveServerTestCase
-import time
+
 
 class NewVisitorTest(LiveServerTestCase):
 
@@ -83,6 +83,25 @@ class NewVisitorTest(LiveServerTestCase):
         self.assertNotIn('buy eggs for egg salad', page_text)
         self.assertNotIn('make egg salad', page_text)
 
-        self.fail("finish the test!")
-
         # she visits the URL and her list is just as she left it.
+
+    def test_layout_and_styling(self):
+        # Edith goes to the home page
+        self.browser.get(self.live_server_url)
+        self.browser.set_window_size(1024, 768)
+
+        # She notices that the input box is nicely centered
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
+
+        inputbox.send_keys("testing\n")
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + inputbox.size['width'] / 2,
+            512,
+            delta=5
+        )
