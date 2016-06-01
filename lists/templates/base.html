@@ -2,18 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-COMPATIBLE" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>To-Do lists</title>
+    <link rel="stylesheet" href="/static/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/static/base.css">
 </head>
 <body>
-    <h1>{% block header_text %}{% endblock %}</h1>
-    <form method="POST" action="{% block form_action %}{% endblock %}">
-        <input name="item_text" id="id_new_item" placeholder="Enter a to-do item">
-        {% csrf_token %}
-    </form>
 
-    {% block table %}
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2 jumbotron">
+                <div class="text-center">
+                    <h1>{% block header_text %}{% endblock %}</h1>
+                    <form method="POST" action="{% block form_action %}{% endblock %}">
+                        <input class="form-control input-lg" name="item_text" id="id_new_item" placeholder="Enter a to-do item" autofocus>
+                        {% csrf_token %}
+                    </form>
+                </div>
+            </div>
+        </div>
 
-    {% endblock %}
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                {% block table %}
+                {% endblock %}
+            </div>
+        </div>
 
+    </div>
 </body>
 </html>
