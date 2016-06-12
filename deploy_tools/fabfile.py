@@ -3,7 +3,7 @@ from fabric.api import env, local, run
 import random
 
 
-REPO_URL = 'https://github.com/hjwp/book-example.git'
+REPO_URL = 'https://github.com/CodeAmend/django-tdd-superlists.git'
 
 
 def deploy():
