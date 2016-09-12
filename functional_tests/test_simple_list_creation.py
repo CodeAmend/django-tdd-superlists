@@ -47,7 +47,7 @@ class NewVisitorTest(FunctionalTest):
 
         # A new browser session to emulate a new user with different cookies.
         self.browser.quit()
-        self.browser = webdriver.Firefox()
+        self.browser = webdriver.Chrome()
 
         # Francis visits home page and there is no sign of Lacy's list
         self.browser.get(self.server_url)
